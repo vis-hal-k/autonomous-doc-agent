@@ -23,16 +23,18 @@ def execute_task(plan:Plan , task ) -> SectionContent:
     #  In the Other section in the prompt : It takes the titles of every task in the plan except the one currently being written.
     return writer_llm.invoke(prompt) 
 
-def execute_plan(plan:Plan) -> list[SectionContent] :
-    sections= []  
-    for task in plan.tasks:
-        if task.status == "done":
-            continue 
+def execute_plan(plan:Plan, results : dict[int , SectionContent] | None = None) -> list[SectionContent] :
+    print(f"Invoking the Execution Plan Agent")
+    results = results if results is not None else {} 
 
+    for task in plan.tasks:
+        if task.status != "pending" : # skip done and failed 
+            continue 
+        print(f"Into the TASK : {task.id} with title : {task.title}")  
         for attempt in range(2):
             try:
                 executed_task = execute_task(plan,task)
-                sections.append(executed_task) 
+                results[task.id] = executed_task 
                 task.status = "done" 
                 break 
             except Exception as e:
@@ -40,6 +42,6 @@ def execute_plan(plan:Plan) -> list[SectionContent] :
         else :
             task.status = "failed" 
 
-    return sections
+    return results
 
 

@@ -2,7 +2,8 @@ from fastapi import FastAPI, HTTPException
 from models.schema import AgentRequest
 from agents.executor import execute_plan
 from agents.planner import create_plan
-# from tools.doc_builder import build_docx
+from agents.reflection import review_plan
+from tools.doc_builder import build_docx
 import uvicorn  
 
 app = FastAPI(
@@ -27,13 +28,28 @@ def run_agent(payload: AgentRequest):
 
     user_request = payload.request 
     plan = create_plan(user_request) 
-    sections = execute_plan(plan) 
-    for sec in sections:
-        print(sec)
-    # path = build_docx(plan ,sections) 
+    print(f"Number of tasks is generated : {len(plan.tasks)}")
+    results = execute_plan(plan) 
+    review = review_plan(user_request , plan , results) 
+    print(f"Review Status : {review.ok}") 
+    added = [] 
+    if not review.ok and review.missing_tasks:
+        next_id = max(t.id for t in plan.tasks) + 1 
+        for i , task in enumerate(review.missing_tasks[:3]):
+            print(f"Missing Task: {task.title}")
+            task.id = next_id + i  # ids always assigned by code 
+            task.status = "pending" 
+            ids = [t.id for t in plan.tasks] # we get all the ids 
+            pos = ids.index(task.insert_after_id) + 1 if task.insert_after_id in ids else len(ids) 
+            plan.tasks.insert(pos, task) # it insert the the particular position.
+            added.append(task.title) 
+        execute_plan(plan, results)   # only pending tasks run, results is updated in place
+
+
+    path = build_docx(plan ,results)  
 
     return {
-        "status": "received",
+        "path" : path ,
         "user_request": user_request,
         "message": "Request received successfully."
     }

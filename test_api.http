@@ -18,5 +18,5 @@ POST http://127.0.0.1:8000/agent
 Content-Type: application/json
 
 {
-    "request": "Prepare a project execution plan for an industrial mining and material handling plant involving conveyors, feeders, transfer chutes and structural modelling. The client has not provided a project budget, execution schedule or detailed engineering scope. Identify missing information, make reasonable assumptions, and prepare a professional execution plan covering scope, engineering activities, deliverables, milestones, risks and recommendations. Clearly distinguish assumptions from confirmed information."
+    "request": "Create a project proposal for migrating our company's customer database from on-premise servers to the cloud. The document must include: an executive summary, a phased timeline, a budget breakdown, a risk table with owners, a security and compliance plan, a data backup and rollback strategy, a team responsibilities section, a staff training plan, a stakeholder communicate."
 }
