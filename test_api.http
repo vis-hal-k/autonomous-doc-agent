@@ -1,0 +1,22 @@
+
+### Health Check
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+
+### Test Agent - Standard Request
+POST http://127.0.0.1:8000/agent
+Content-Type: application/json
+
+{
+    "request": "Prepare a project plan for organizing a company annual event, including activities, timeline, budget and responsibilities."
+}
+
+
+### Test Agent - Complex Request
+POST http://127.0.0.1:8000/agent
+Content-Type: application/json
+
+{
+    "request": "Prepare a project execution plan for an industrial mining and material handling plant involving conveyors, feeders, transfer chutes and structural modelling. The client has not provided a project budget, execution schedule or detailed engineering scope. Identify missing information, make reasonable assumptions, and prepare a professional execution plan covering scope, engineering activities, deliverables, milestones, risks and recommendations. Clearly distinguish assumptions from confirmed information."
+}
