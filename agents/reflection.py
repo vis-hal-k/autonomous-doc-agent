@@ -11,8 +11,8 @@ def build_outline(plan: Plan, results: dict[int, SectionContent]) -> str:
         s = results.get(t.id)
         if s is None:
             continue
-        # text = " ".join(s.paragraphs + s.bullets)[:100]     # short preview only
-        lines.append(f"{t.id}: {s.heading}")
+        text = " ".join(s.paragraphs + s.bullets)[:100]     # short preview only
+        lines.append(f"{t.id}: {s.heading} - {text}")
     return "\n".join(lines)
 
 
@@ -25,18 +25,20 @@ def review_plan(request : str , plan : Plan , results: dict[int, SectionContent]
             Review this drafted document against the user's request.
             Request : {request} 
             Assumptions : {plan.assumptions} 
-            Section written : (id: section) :
+            Section written : (id: section - text) :
             {outline} 
             # Rules 
             - List every requirement explicitly named in the request. 
             - For each one, check whether a section above covers it. 
-            - Add a missing task ONLY for a requirement that is named in the request and has no matching section .
+            - If All the requirment is avialable in the task then it is not necessary to add the missing task.
             - Add at most {3} missing tasks. If there are more gaps, keep the {3} most important ones, ordered from most to least important. 
             # Not To Do
             Do NOT add sections for anything the request did not ask for, even if it would be nice to have. Do NOT add sections that duplicate existing ones.
             If all requirements are covered, return missing_tasks as an empty list.
             For each missing task, set insert_after_id to the id of the section it should follow.
-            """
+            
+            
+            """ 
     review = reviewer_llm.invoke(prompt)
 
     review.missing_tasks = review.missing_tasks[:3]

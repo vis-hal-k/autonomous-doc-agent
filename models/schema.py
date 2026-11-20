@@ -32,7 +32,6 @@ class SectionContent(BaseModel):
 
 class Review(BaseModel):
     ok: bool = Field(description="False if missing_tasks has any entry, True only if missing_tasks is empty")
-    issues: list[str] = Field(default=[], description="Requirements from the request that no section covers")
-    missing_tasks: list[Task] = Field(default=[] , description="One task per uncovered requirement. Empty list only if every requirement is covered") 
-
+    issues: list[str] = []
+    missing_tasks: list[Task] = []
 
