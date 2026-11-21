@@ -6,11 +6,13 @@ from agents.planner import create_plan
 from agents.reflection import review_plan
 from tools.doc_builder import build_docx
 import uvicorn  
+import mammoth
 from pathlib import Path 
-from slugify import slugify
+from fastapi.responses import FileResponse, HTMLResponse
 
 # anchor to the app's location so it works no matter where you start uvicorn
 OUTPUT_DIR = (Path(__file__).parent / "output").resolve()
+DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
 app = FastAPI(
     title="Autonomous AI Agent",
@@ -43,6 +45,9 @@ def run_agent(payload: AgentRequest):
         next_id = max(t.id for t in plan.tasks) + 1 
         for i , task in enumerate(review.missing_tasks[:3]):
             print(f"Missing Task: {task.title}")
+            # what the LLM asked for
+            print(f"[INSERT] reviewer asked: insert_after_id = {task.insert_after_id}")
+
             task.id = next_id + i  # ids always assigned by code 
             task.status = "pending" 
             ids = [t.id for t in plan.tasks] # we get all the ids 
@@ -63,7 +68,21 @@ def run_agent(payload: AgentRequest):
 # OUTPUT_DIR = Path("outputs").resolve() 
 
 
-# @app.get()
+@app.get("/open-doc")
+def open_latest_docx():
+    docs = list(OUTPUT_DIR.glob("*.docx"))
+    if not docs:
+        raise HTTPException(status_code=404, detail="No documents found")
+    latest = max(docs, key=lambda p: p.stat().st_mtime)
+    with latest.open("rb") as f:
+        html = mammoth.convert_to_html(f).value
+
+    return HTMLResponse(f"<html><body style='max-width:800px;margin:auto'>{html}</body></html>")
+    # return FileResponse(path=latest, media_type=DOCX_MIME, filename=latest.name)
+
+
+
+
 
 if __name__ == "__main__":
 

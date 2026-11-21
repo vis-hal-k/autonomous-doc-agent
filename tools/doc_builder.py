@@ -2,6 +2,8 @@ import uuid
 from pathlib import Path 
 from docx import Document 
 from models.schema import Plan, SectionContent 
+from datetime import datetime 
+from slugify import slugify 
 
 OUTPUT_DIR = Path("output") 
 OUTPUT_DIR.mkdir(exist_ok=True) 
@@ -26,6 +28,8 @@ def build_docx(plan : Plan , results : dict[int, SectionContent] ) -> str :
         for b in s.bullets:
             doc.add_paragraph(b, style="List Bullet") 
 
-    path = OUTPUT_DIR / f"{uuid.uuid4().hex}.docx"
+    filename = f"{datetime.now():%Y%m%d_%H%M%S}_{slugify(plan.title)}.docx"
+    # 20261122_143210_rag-for-customer-support.docx
+    path = OUTPUT_DIR / filename
     doc.save(path)
     return str(path)

@@ -5,5 +5,6 @@ pydantic>=2.6
 python-docx>=1.1
 python-dotenv>=1.0
 pytest>=8.0
+mammoth
 langchain_ollama
 chromadb

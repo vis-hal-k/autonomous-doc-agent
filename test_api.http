@@ -9,8 +9,8 @@ POST http://127.0.0.1:8000/agent
 Content-Type: application/json
 
 {
-    "request": "Create a project Plan for learning and implementing the docker."
-}
+    "request": "Create a plan to make coffee in 4 tasks list"
+}  
 
 
 ### Test Agent - Complex Request
@@ -20,3 +20,8 @@ Content-Type: application/json
 {
     "request": "Create a project proposal for migrating our company's customer database from on-premise servers to the cloud. The document must include: an executive summary, a phased timeline, a budget breakdown, a risk table with owners, a security and compliance plan, a data backup and rollback strategy, a team responsibilities section, a staff training plan, a stakeholder communicate."
 }
+
+### 200
+GET http://127.0.0.1:8000/open-doc
+Content-Type: application/json
+
