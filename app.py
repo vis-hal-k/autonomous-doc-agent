@@ -6,6 +6,11 @@ from agents.planner import create_plan
 from agents.reflection import review_plan
 from tools.doc_builder import build_docx
 import uvicorn  
+from pathlib import Path 
+from slugify import slugify
+
+# anchor to the app's location so it works no matter where you start uvicorn
+OUTPUT_DIR = (Path(__file__).parent / "output").resolve()
 
 app = FastAPI(
     title="Autonomous AI Agent",
@@ -33,7 +38,7 @@ def run_agent(payload: AgentRequest):
     results = execute_plan(plan) 
     review = review_plan(user_request , plan , results) 
     print(f"Review Status : {review.ok}") 
-    added = [] 
+    added = []  
     if not review.ok and review.missing_tasks:
         next_id = max(t.id for t in plan.tasks) + 1 
         for i , task in enumerate(review.missing_tasks[:3]):
@@ -54,6 +59,11 @@ def run_agent(payload: AgentRequest):
         "user_request": user_request,
         "message": "Request received successfully."
     }
+
+# OUTPUT_DIR = Path("outputs").resolve() 
+
+
+# @app.get()
 
 if __name__ == "__main__":
 

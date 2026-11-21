@@ -5,15 +5,15 @@ Accept: application/json
 
 
 ### Test Agent - Standard Request
-
-
-### Test Agent - Complex RequestPOST http://127.0.0.1:8000/agent
+POST http://127.0.0.1:8000/agent
 Content-Type: application/json
 
 {
-    "request": "Prepare a project plan for organizing a company annual event, including activities, timeline, budget and responsibilities."
+    "request": "Create a project Plan for learning and implementing the docker."
 }
 
+
+### Test Agent - Complex Request
 POST http://127.0.0.1:8000/agent
 Content-Type: application/json
 
